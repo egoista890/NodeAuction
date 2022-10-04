@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{title}}</title>
+        <!-- 모바일 웹에서 설정-->
+        <meta name="viewport" 
+            content="width=device-width, user-scalable=no" />
+        <!-- public 디렉토리의 main.css 파일을 읽어서 적용-->
+        <link rel="stylesheet" href="/main.css" />
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="profile-wrap">
+                <div class="profile">
+                    <!--로그인 된 경우 출력-->
+                    {% if user and user.id %}
+                        <div class="user-name">
+                            안녕하세요 {{user.nick}}님
+                        </div>
+                        <div class="user-money">
+                            보유자산 {{user.money}}원
+                        </div>
+                        <input type="hidden"
+                        id="my-id" value="user.id" />
+                        <a href="/auth/logout"
+                        id="logout" class="btn">로그아웃</a>
+                        <a href="/good"
+                        id="register" class="btn">상품등록</a>
+                        <a href="/list"
+                        id="list" class="btn">입찰내역</a>
+                    {% else %}
+                        <form action="/auth/login" id="login-form"
+                        method="post">
+                            <div class="input-group">
+                                <label for="email">이메일</label>
+                                <input type="email" id="email"
+                                name="email" required autofocus />
+                            </div>
+                            <div class="input-group">
+                                <label for="password">비밀번호</label>
+                                <input type="password" id="password"
+                                name="password" required />
+                            </div>
+                            <a href="/join" id="join" class="btn">
+                                회원가입
+                            </a>
+                            <button id="login" class="btn" type="submit">
+                                로그인
+                            </button>
+                        </form>
+                        {% endif %}
+                </div>
+                <footer>
+                    Made By&nbsp;
+                    <a href="https://ggangpae1.tistory.com">
+                    ADAM</a>
+                </footer>
+                {% block good %}
+                {% endblock %}
+            </div>
+            {% block content %}
+            {% endblock %}
+        </div>
+        <script>
+            //로그인에 실패했을 때 나 회원가입에 실패했을 때
+            //메시지 출력
+            window.addEventListener('load', (e) => {
+                if(new URL(location.href)
+                    .searchParams.get('loginError')){
+                       alert(new URL(location.href)
+                        .searchParams.get('loginError')); 
+                }
+            })
+        </script>
+    </body>
+</html>
